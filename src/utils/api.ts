@@ -6,7 +6,7 @@ import { INewsApiResponse, ITheGuardianResponse } from "./interfaces";
 export const getNewsApiData = async () => {
   const response = await ky
     .get<INewsApiResponse>(
-      `https://newsapi.org/v2/everything?q=Apple&apiKey=${
+      `https://newsapi.org/v2/everything?q=General&apiKey=${
         import.meta.env.VITE_NEWS_API_KEY
       }`
     )
