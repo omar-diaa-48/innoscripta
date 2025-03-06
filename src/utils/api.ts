@@ -6,7 +6,7 @@ import { INewsApiResponse, ITheGuardianResponse } from "./interfaces";
 export const getNewsApiData = async () => {
   const response = await ky
     .get<INewsApiResponse>(
-      `https://newsapi.org/v2/everything?q=Apple&sortBy=popularity&apiKey=${
+      `https://newsapi.org/v2/everything?q=Apple&apiKey=${
         import.meta.env.VITE_NEWS_API_KEY
       }`
     )
@@ -30,7 +30,7 @@ export const getTheGuardianData = async () => {
 export const getNyTimesData = async () => {
   const response = await ky
     .get<ITheGuardianResponse>(
-      `https://api.nytimes.com/svc/search/v2/articlesearch.json?q=election&api-key=${
+      `https://api.nytimes.com/svc/search/v2/articlesearch.json?api-key=${
         import.meta.env.VITE_NEWYORKTIMES_API_KEY
       }`
     )
