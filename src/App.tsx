@@ -1,6 +1,6 @@
 function App() {
   return (
-    <div>App</div>
+    <div className="flex justify-center">App</div>
   )
 }
 
