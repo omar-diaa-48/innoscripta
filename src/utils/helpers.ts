@@ -15,7 +15,8 @@ export const mapResponseToArticles = (
     case ArticleSource.NEWS_API:
       return (response as INewsApiResponse).articles.map((item, index) => ({
         id: Date.now() + index,
-        category: item.source.name,
+        // NEWS API source does not categorize articles, so we use "News" to be a general category
+        category: "News",
         imageSrc: item.urlToImage,
         description: item.description,
         title: item.title,
@@ -37,10 +38,10 @@ export const mapResponseToArticles = (
         (item, index) => ({
           id: Date.now() + index,
           category: item.section_name,
-          imageSrc: item.multimedia[0].url,
+          imageSrc: "https://www.nytimes.com/" + item.multimedia[0]?.url,
           description: item.lead_paragraph,
           title: item.headline.main,
-          source: ArticleSource.NEWS_API,
+          source: ArticleSource.NY_TIMES,
         })
       );
 

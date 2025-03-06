@@ -4,31 +4,19 @@ import clsx from "clsx";
 import Article from "./Article";
 import { IArticle } from "../utils/interfaces";
 import { ArticleSource } from "../utils/constants";
-import { useQuery } from "@tanstack/react-query";
-import { getNewsApiData, getNyTimesData, getTheGuardianData } from "../utils/api";
+import { getNewsApiData, getNyTimesData } from "../utils/api";
+import Loader from "./Loader";
 
-const sources = ["All", ArticleSource.NEWS_API, ArticleSource.NY_TIMES, ArticleSource.THE_GUARDIAN];
-const categories = ["All", "Business", "Tech", "Sports"];
+const sources = [
+    "All",
+    ArticleSource.NEWS_API,
+    // ArticleSource.NY_TIMES, 
+    ArticleSource.THE_GUARDIAN
+];
 
 function NewsFeed() {
-    const { data: newsApiData } = useQuery<Array<IArticle>>({
-        queryKey: ['news-api-articles'],
-        queryFn: getNewsApiData,
-        initialData: [],
-    })
-
-    const { data: theGuardianData } = useQuery<Array<IArticle>>({
-        queryKey: ['the-guardian-articles'],
-        queryFn: getTheGuardianData,
-        initialData: [],
-        enabled: false,
-    })
-
-    const { data: nyTimesData } = useQuery<Array<IArticle>>({
-        queryKey: ['ny-times-articles'],
-        queryFn: getNyTimesData,
-        initialData: [],
-    })
+    const [isLoading, setIsLoading] = useState(false)
+    const [groupedArticles, setGroupedArticles] = useState<Array<IArticle>>([])
 
     const [activeTab, setActiveTab] = useState("All");
     const [selectedCategory, setSelectedCategory] = useState("All");
@@ -37,23 +25,22 @@ function NewsFeed() {
     const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("")
 
     const filteredArticles = useMemo(() => {
-        let groupedArticles: Array<IArticle> = []
-
-        if (newsApiData.length)
-            groupedArticles = groupedArticles.concat(newsApiData.slice(0, 10))
-
-        if (theGuardianData.length)
-            groupedArticles = groupedArticles.concat(theGuardianData.slice(0, 10))
-
-        if (nyTimesData.length)
-            groupedArticles = groupedArticles.concat(nyTimesData.slice(0, 10))
-
         return groupedArticles.filter(
             (article) =>
                 (activeTab === "All" || article.source === activeTab) &&
                 (selectedCategory === "All" || article.category === selectedCategory) &&
                 article.title.toLowerCase().includes(debouncedSearchQuery.toLowerCase()))
-    }, [activeTab, selectedCategory, debouncedSearchQuery, newsApiData, theGuardianData, nyTimesData])
+    }, [activeTab, selectedCategory, debouncedSearchQuery, groupedArticles])
+
+    const allowedCategories = useMemo(() => {
+        const allowedCategoriesSet = new Set<string>()
+
+        groupedArticles.forEach((article) => {
+            allowedCategoriesSet.add(article.category)
+        });
+
+        return ["All", ...allowedCategoriesSet]
+    }, [groupedArticles])
 
     useEffect(() => {
         const timerId = setTimeout(() => {
@@ -64,6 +51,31 @@ function NewsFeed() {
             clearTimeout(timerId)
         }
     }, [searchQuery])
+
+    useEffect(() => {
+        setIsLoading(true)
+        Promise.all([
+            getNewsApiData(),
+            // getTheGuardianData(),
+            getNyTimesData()
+        ])
+            .then((responses) => {
+                const [
+                    newsApiData,
+                    // theGuardianData, 
+                    nyTimesData
+                ] = responses;
+
+                setGroupedArticles([
+                    ...newsApiData,
+                    // ...theGuardianData, 
+                    ...nyTimesData
+                ])
+            })
+            .finally(() => {
+                setIsLoading(false)
+            })
+    }, [])
 
     return (
         <div className="min-h-screen p-6 bg-gray-100">
@@ -98,7 +110,7 @@ function NewsFeed() {
                     value={selectedCategory}
                     onChange={(e) => setSelectedCategory(e.target.value)}
                 >
-                    {categories.map((category) => (
+                    {allowedCategories.map((category) => (
                         <option key={category} value={category}>
                             {category}
                         </option>
@@ -106,12 +118,21 @@ function NewsFeed() {
                 </select>
             </div>
 
+
             {/* Article Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                {filteredArticles.map((article) => (
-                    <Article key={article.id} article={article} />
-                ))}
-            </div>
+            {
+                isLoading ? (
+                    <div className="flex justify-center items-center">
+                        <Loader />
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                        {filteredArticles.map((article) => (
+                            <Article key={article.id} article={article} />
+                        ))}
+                    </div>
+                )
+            }
         </div>
     );
 }

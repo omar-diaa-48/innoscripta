@@ -3,8 +3,14 @@ import { ArticleSource } from "./constants";
 import { mapResponseToArticles } from "./helpers";
 import { INewsApiResponse, ITheGuardianResponse } from "./interfaces";
 
+export const api = ky.create({
+  cache: "default",
+  timeout: 3000,
+  retry: 2,
+});
+
 export const getNewsApiData = async () => {
-  const response = await ky
+  const response = await api
     .get<INewsApiResponse>(
       `https://newsapi.org/v2/everything?q=General&apiKey=${
         import.meta.env.VITE_NEWS_API_KEY
@@ -15,7 +21,7 @@ export const getNewsApiData = async () => {
 };
 
 export const getTheGuardianData = async () => {
-  const response = await ky
+  const response = await api
     .get<ITheGuardianResponse>(`https://content.guardianapis.com/search`, {
       headers: {
         "api-key": import.meta.env.VITE_THEGUARDIAN_API_KEY,
@@ -28,7 +34,7 @@ export const getTheGuardianData = async () => {
 };
 
 export const getNyTimesData = async () => {
-  const response = await ky
+  const response = await api
     .get<ITheGuardianResponse>(
       `https://api.nytimes.com/svc/search/v2/articlesearch.json?api-key=${
         import.meta.env.VITE_NEWYORKTIMES_API_KEY
