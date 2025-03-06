@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import { useEffect, useMemo, useState } from "react";
 import { IArticle } from "./utils/interfaces";
-import { ArticleSource } from "./utils/enums";
+import { ArticleSource } from "./utils/constants";
 
 const sources = ["All", ArticleSource.NEWS_API, ArticleSource.NY_TIMES, ArticleSource.THE_GUARDIAN];
 const categories = ["All", "Business", "Tech", "Sports"];

@@ -1,4 +1,4 @@
-import { ArticleSource } from "./enums";
+import { ArticleSourceType } from "./types";
 
 export interface INewsApiResponse {
   status: string;
@@ -124,10 +124,9 @@ export interface INYTimesArticle {
 
 export interface IArticle {
   id: number;
-  source: (typeof ArticleSource)[keyof typeof ArticleSource];
-
   title: string;
   description: string;
   category: string;
   imageSrc: string;
+  source: ArticleSourceType;
 }
