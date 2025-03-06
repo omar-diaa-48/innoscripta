@@ -21,13 +21,13 @@ function NewsFeed() {
         queryKey: ['the-guardian-articles'],
         queryFn: getTheGuardianData,
         initialData: [],
-        enabled: false
+        enabled: false,
     })
 
     const { data: nyTimesData } = useQuery<Array<IArticle>>({
         queryKey: ['ny-times-articles'],
         queryFn: getNyTimesData,
-        initialData: []
+        initialData: [],
     })
 
     const [activeTab, setActiveTab] = useState("All");
@@ -36,12 +36,24 @@ function NewsFeed() {
     const [searchQuery, setSearchQuery] = useState("");
     const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("")
 
-    const filteredArticles = useMemo(() => [...(newsApiData.slice(0, 5)), ...(theGuardianData.slice(0, 5)), ...(nyTimesData.slice(0, 5))].filter(
-        (article) =>
-            (activeTab === "All" || article.source === activeTab) &&
-            (selectedCategory === "All" || article.category === selectedCategory) &&
-            article.title.toLowerCase().includes(debouncedSearchQuery.toLowerCase())
-    ), [activeTab, selectedCategory, debouncedSearchQuery, newsApiData, theGuardianData, nyTimesData]);
+    const filteredArticles = useMemo(() => {
+        let groupedArticles: Array<IArticle> = []
+
+        if (newsApiData.length)
+            groupedArticles = groupedArticles.concat(newsApiData.slice(0, 10))
+
+        if (theGuardianData.length)
+            groupedArticles = groupedArticles.concat(theGuardianData.slice(0, 10))
+
+        if (nyTimesData.length)
+            groupedArticles = groupedArticles.concat(nyTimesData.slice(0, 10))
+
+        return groupedArticles.filter(
+            (article) =>
+                (activeTab === "All" || article.source === activeTab) &&
+                (selectedCategory === "All" || article.category === selectedCategory) &&
+                article.title.toLowerCase().includes(debouncedSearchQuery.toLowerCase()))
+    }, [activeTab, selectedCategory, debouncedSearchQuery, newsApiData, theGuardianData, nyTimesData])
 
     useEffect(() => {
         const timerId = setTimeout(() => {
@@ -56,7 +68,7 @@ function NewsFeed() {
     return (
         <div className="min-h-screen p-6 bg-gray-100">
             {/* Tabs */}
-            <div className="flex gap-x-4 mb-6 overflow-x-scroll">
+            <div className="flex gap-x-4 mb-6 overflow-x-scroll lg:overflow-x-visible">
                 {sources.map((source) => (
                     <button
                         key={source}
