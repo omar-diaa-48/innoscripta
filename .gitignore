@@ -23,4 +23,5 @@ dist-ssr
 *.sln
 *.sw?
 
+# For simplicity the `.env` is not ignored to make it easer for the task but it should be ignored in production
 .env
