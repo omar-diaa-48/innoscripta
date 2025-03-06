@@ -5,7 +5,7 @@ import Article from "./Article";
 import { IArticle } from "../utils/interfaces";
 import { ArticleSource } from "../utils/constants";
 import { useQuery } from "@tanstack/react-query";
-import { getNewsApiData } from "../utils/api";
+import { getNewsApiData, getNyTimesData, getTheGuardianData } from "../utils/api";
 
 const sources = ["All", ArticleSource.NEWS_API, ArticleSource.NY_TIMES, ArticleSource.THE_GUARDIAN];
 const categories = ["All", "Business", "Tech", "Sports"];
@@ -14,6 +14,19 @@ function NewsFeed() {
     const { data: newsApiData } = useQuery<Array<IArticle>>({
         queryKey: ['news-api-articles'],
         queryFn: getNewsApiData,
+        initialData: [],
+    })
+
+    const { data: theGuardianData } = useQuery<Array<IArticle>>({
+        queryKey: ['the-guardian-articles'],
+        queryFn: getTheGuardianData,
+        initialData: [],
+        enabled: false
+    })
+
+    const { data: nyTimesData } = useQuery<Array<IArticle>>({
+        queryKey: ['ny-times-articles'],
+        queryFn: getNyTimesData,
         initialData: []
     })
 
@@ -23,12 +36,12 @@ function NewsFeed() {
     const [searchQuery, setSearchQuery] = useState("");
     const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("")
 
-    const filteredArticles = useMemo(() => [...newsApiData].filter(
+    const filteredArticles = useMemo(() => [...(newsApiData.slice(0, 5)), ...(theGuardianData.slice(0, 5)), ...(nyTimesData.slice(0, 5))].filter(
         (article) =>
             (activeTab === "All" || article.source === activeTab) &&
             (selectedCategory === "All" || article.category === selectedCategory) &&
             article.title.toLowerCase().includes(debouncedSearchQuery.toLowerCase())
-    ), [activeTab, selectedCategory, debouncedSearchQuery, newsApiData]);
+    ), [activeTab, selectedCategory, debouncedSearchQuery, newsApiData, theGuardianData, nyTimesData]);
 
     useEffect(() => {
         const timerId = setTimeout(() => {
