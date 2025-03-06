@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { IArticle } from "./utils/interfaces";
 import { ArticleSource } from "./utils/enums";
 
@@ -43,15 +43,27 @@ const demoArticles: Array<IArticle> = [
 
 const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState("All");
-  const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
+
+  const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("")
 
   const filteredArticles = useMemo(() => demoArticles.filter(
     (article) =>
       (activeTab === "All" || article.source === activeTab) &&
       (selectedCategory === "All" || article.category === selectedCategory) &&
-      article.title.toLowerCase().includes(searchQuery.toLowerCase())
-  ), [activeTab, searchQuery, selectedCategory]);
+      article.title.toLowerCase().includes(debouncedSearchQuery.toLowerCase())
+  ), [activeTab, selectedCategory, debouncedSearchQuery]);
+
+  useEffect(() => {
+    const timerId = setTimeout(() => {
+      setDebouncedSearchQuery(searchQuery)
+    }, 500);
+
+    return () => {
+      clearTimeout(timerId)
+    }
+  }, [searchQuery])
 
   return (
     <div className="min-h-screen p-6 bg-gray-100">
