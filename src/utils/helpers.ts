@@ -1,9 +1,9 @@
 import { ArticleSource } from "./constants";
 import {
-    IArticle,
-    INewsApiResponse,
-    INYTimesResponse,
-    ITheGuardianResponse,
+  IArticle,
+  INewsApiResponse,
+  INYTimesResponse,
+  ITheGuardianResponse,
 } from "./interfaces";
 import { ArticleSourceType } from "./types";
 
@@ -14,7 +14,7 @@ export const mapResponseToArticles = (
   switch (type) {
     case ArticleSource.NEWS_API:
       return (response as INewsApiResponse).articles.map((item, index) => ({
-        id: index + 1,
+        id: Date.now() + index,
         category: item.source.name,
         imageSrc: item.urlToImage,
         description: item.description,
@@ -24,7 +24,7 @@ export const mapResponseToArticles = (
 
     case ArticleSource.THE_GUARDIAN:
       return (response as ITheGuardianResponse).results.map((item, index) => ({
-        id: index + 1,
+        id: Date.now() + index,
         category: item.sectionName,
         imageSrc: item.webUrl,
         description: item.pillarName,
@@ -35,7 +35,7 @@ export const mapResponseToArticles = (
     case ArticleSource.NY_TIMES:
       return (response as INYTimesResponse).response.docs.map(
         (item, index) => ({
-          id: index + 1,
+          id: Date.now() + index,
           category: item.section_name,
           imageSrc: item.multimedia[0].url,
           description: item.lead_paragraph,

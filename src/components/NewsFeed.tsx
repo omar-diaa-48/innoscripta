@@ -2,6 +2,7 @@ import clsx from "clsx";
 import { useEffect, useMemo, useState } from "react";
 import { IArticle } from "../utils/interfaces";
 import { ArticleSource } from "../utils/constants";
+import Article from "./Article";
 
 const sources = ["All", ArticleSource.NEWS_API, ArticleSource.NY_TIMES, ArticleSource.THE_GUARDIAN];
 const categories = ["All", "Business", "Tech", "Sports"];
@@ -109,23 +110,7 @@ function NewsFeed() {
             {/* Article Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                 {filteredArticles.map((article) => (
-
-                    <div key={article.id} className="bg-white p-4 rounded-lg shadow">
-                        {
-                            article.imageSrc ? (
-                                <img
-                                    src={article.imageSrc}
-                                    alt={article.title}
-                                    className="w-full h-40 object-cover rounded-md mb-4"
-                                />
-                            ) : (
-                                <div className="w-full h-40 bg-blue-400" />
-                            )
-                        }
-
-                        <h3 className="text-lg font-bold">{article.title}</h3>
-                        <p className="text-sm text-gray-500">{article.source} • {article.category}</p>
-                    </div>
+                    <Article key={article.id} article={article} />
                 ))}
             </div>
         </div>
