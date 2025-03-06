@@ -1,57 +1,19 @@
-import clsx from "clsx";
 import { useEffect, useMemo, useState } from "react";
-import { IArticle, INewsApiResponse } from "../utils/interfaces";
-import { ArticleSource } from "../utils/constants";
+import clsx from "clsx";
+
 import Article from "./Article";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import ky from "ky";
-import { mapResponseToArticles } from "../utils/helpers";
+import { IArticle } from "../utils/interfaces";
+import { ArticleSource } from "../utils/constants";
+import { useQuery } from "@tanstack/react-query";
+import { getNewsApiData } from "../utils/api";
 
 const sources = ["All", ArticleSource.NEWS_API, ArticleSource.NY_TIMES, ArticleSource.THE_GUARDIAN];
 const categories = ["All", "Business", "Tech", "Sports"];
 
-const demoArticles: Array<IArticle> = [
-    {
-        id: 1,
-        title: "Tech Innovations in 2025",
-        source: ArticleSource.NEWS_API,
-        category: "Tech",
-        imageSrc: "",
-        description: ''
-    },
-    {
-        id: 2,
-        title: "Global Markets Update",
-        source: ArticleSource.NY_TIMES,
-        category: "Business",
-        imageSrc: "",
-        description: ''
-    },
-    {
-        id: 3,
-        title: "Sports Highlights This Week",
-        source: ArticleSource.THE_GUARDIAN,
-        category: "Sports",
-        imageSrc: "",
-        description: ''
-    },
-    {
-        id: 4,
-        title: "US stock market crashes",
-        source: ArticleSource.THE_GUARDIAN,
-        category: "Finance",
-        imageSrc: "",
-        description: ''
-    },
-];
-
 function NewsFeed() {
-    const { data } = useQuery<Array<IArticle>>({
+    const { data: newsApiData } = useQuery<Array<IArticle>>({
         queryKey: ['news-api-articles'],
-        queryFn: async () => {
-            const response = await ky.get<INewsApiResponse>(`https://newsapi.org/v2/everything?q=Apple&sortBy=popularity&apiKey=${import.meta.env.VITE_NEWS_API_KEY}`).json()
-            return mapResponseToArticles(response, ArticleSource.NEWS_API)
-        },
+        queryFn: getNewsApiData,
         initialData: []
     })
 
@@ -61,12 +23,12 @@ function NewsFeed() {
     const [searchQuery, setSearchQuery] = useState("");
     const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("")
 
-    const filteredArticles = useMemo(() => [...data, ...demoArticles].filter(
+    const filteredArticles = useMemo(() => [...newsApiData].filter(
         (article) =>
             (activeTab === "All" || article.source === activeTab) &&
             (selectedCategory === "All" || article.category === selectedCategory) &&
             article.title.toLowerCase().includes(debouncedSearchQuery.toLowerCase())
-    ), [activeTab, selectedCategory, debouncedSearchQuery, data]);
+    ), [activeTab, selectedCategory, debouncedSearchQuery, newsApiData]);
 
     useEffect(() => {
         const timerId = setTimeout(() => {
