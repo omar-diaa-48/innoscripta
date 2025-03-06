@@ -1,8 +1,11 @@
 import clsx from "clsx";
 import { useEffect, useMemo, useState } from "react";
-import { IArticle } from "../utils/interfaces";
+import { IArticle, INewsApiResponse } from "../utils/interfaces";
 import { ArticleSource } from "../utils/constants";
 import Article from "./Article";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import ky from "ky";
+import { mapResponseToArticles } from "../utils/helpers";
 
 const sources = ["All", ArticleSource.NEWS_API, ArticleSource.NY_TIMES, ArticleSource.THE_GUARDIAN];
 const categories = ["All", "Business", "Tech", "Sports"];
@@ -43,18 +46,27 @@ const demoArticles: Array<IArticle> = [
 ];
 
 function NewsFeed() {
+    const { data } = useQuery<Array<IArticle>>({
+        queryKey: ['news-api-articles'],
+        queryFn: async () => {
+            const response = await ky.get<INewsApiResponse>(`https://newsapi.org/v2/everything?q=Apple&sortBy=popularity&apiKey=${import.meta.env.VITE_NEWS_API_KEY}`).json()
+            return mapResponseToArticles(response, ArticleSource.NEWS_API)
+        },
+        initialData: []
+    })
+
     const [activeTab, setActiveTab] = useState("All");
     const [selectedCategory, setSelectedCategory] = useState("All");
 
     const [searchQuery, setSearchQuery] = useState("");
     const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("")
 
-    const filteredArticles = useMemo(() => demoArticles.filter(
+    const filteredArticles = useMemo(() => [...data, ...demoArticles].filter(
         (article) =>
             (activeTab === "All" || article.source === activeTab) &&
             (selectedCategory === "All" || article.category === selectedCategory) &&
             article.title.toLowerCase().includes(debouncedSearchQuery.toLowerCase())
-    ), [activeTab, selectedCategory, debouncedSearchQuery]);
+    ), [activeTab, selectedCategory, debouncedSearchQuery, data]);
 
     useEffect(() => {
         const timerId = setTimeout(() => {
