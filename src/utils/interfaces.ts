@@ -123,7 +123,8 @@ export interface INYTimesArticle {
 }
 
 export interface IArticle {
-  source: keyof typeof ArticleSource;
+  id: number;
+  source: (typeof ArticleSource)[keyof typeof ArticleSource];
 
   title: string;
   description: string;
