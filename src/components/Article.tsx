@@ -1,5 +1,6 @@
 import React from "react";
 import { IArticle } from "../utils/interfaces";
+import ExternalLink from "./icons/ExternalLink";
 
 interface Props {
     article: IArticle;
@@ -36,7 +37,14 @@ const Article: React.FC<Props> = ({ article }) => {
 
                 {
                     article.articleUrl && (
-                        <a href={article.articleUrl} target="_blank">Read more</a>
+                        <a
+                            target="_blank"
+                            href={article.articleUrl}
+                        >
+                            <span aria-label="Read more">
+                                <ExternalLink />
+                            </span>
+                        </a>
                     )
                 }
             </div>
