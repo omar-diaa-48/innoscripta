@@ -133,3 +133,8 @@ export interface IArticle {
   articleUrl?: string;
   authors?: Array<string>;
 }
+
+export interface IDropdownOption<T> {
+  value: T;
+  label: string;
+}

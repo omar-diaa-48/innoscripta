@@ -6,6 +6,7 @@ import { IArticle } from "../utils/interfaces";
 import { getNewsApiData, getNyTimesData } from "../utils/api";
 import Loader from "./Loader";
 import useDebouncedValue from "../hooks/useDebouncedValue";
+import Dropdown from "./inputs/Dropdown";
 
 function NewsFeed() {
     const [isLoading, setIsLoading] = useState(false);
@@ -124,34 +125,26 @@ function NewsFeed() {
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                 />
-                <select
-                    className="border p-2 rounded-md"
+
+                <Dropdown
                     value={selectedCategory}
                     onChange={(e) => setSelectedCategory(e.target.value)}
-                >
-                    {allowedCategories.map((category) => (
-                        <option key={category} value={category}>
-                            {category}
-                        </option>
-                    ))}
-                </select>
-                <select
-                    className="border p-2 rounded-md"
+                    options={allowedCategories.map((category) => ({ label: category, value: category }))}
+                />
+                
+                <Dropdown
                     value={selectedAuthor}
                     onChange={(e) => setSelectedAuthor(e.target.value)}
-                >
-                    {allowedAuthors.map((author) => (
-                        <option key={author} value={author}>
-                            {author}
-                        </option>
-                    ))}
-                </select>
+                    options={allowedAuthors.map((author) => ({ label: author, value: author }))}
+                />
+
                 <input
                     type="date"
                     className="border p-2 rounded-md"
                     value={startDate}
                     onChange={(e) => setStartDate(e.target.value)}
                 />
+
                 <input
                     type="date"
                     className="border p-2 rounded-md"
