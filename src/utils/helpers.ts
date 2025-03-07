@@ -21,6 +21,7 @@ export const mapResponseToArticles = (
         description: item.description,
         title: item.title,
         date: new Date(item.publishedAt),
+        articleUrl: item.url,
         source: ArticleSource.NEWS_API,
       }));
 
@@ -32,6 +33,7 @@ export const mapResponseToArticles = (
         description: item.pillarName,
         title: item.webTitle,
         date: new Date(item.webPublicationDate),
+        articleUrl: item.webUrl,
         source: ArticleSource.THE_GUARDIAN,
       }));
 
@@ -44,6 +46,7 @@ export const mapResponseToArticles = (
           description: item.lead_paragraph,
           title: item.headline.main,
           date: new Date(item.pub_date),
+          articleUrl: item.web_url,
           source: ArticleSource.NY_TIMES,
         })
       );

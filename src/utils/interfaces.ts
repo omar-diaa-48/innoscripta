@@ -127,7 +127,8 @@ export interface IArticle {
   title: string;
   description: string;
   category: string;
-  imageSrc: string;
+  imageSrc?: string;
   source: ArticleSourceType;
   date: Date;
+  articleUrl?: string;
 }
