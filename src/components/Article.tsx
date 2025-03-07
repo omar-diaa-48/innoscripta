@@ -28,10 +28,18 @@ const Article: React.FC<Props> = ({ article }) => {
             <h3 className="text-lg font-bold mb-1 grow">{article.title}</h3>
             <p className="text-sm text-gray-500">{article.category}</p>
 
-            {/* Article Date */}
-            <p className="text-xs text-gray-400 mt-2">
-                Published: {new Date(article.date).toLocaleDateString()}
-            </p>
+            <div className="flex justify-between text-xs text-gray-400">
+                {/* Article Date */}
+                <p>
+                    Published: {new Date(article.date).toLocaleDateString()}
+                </p>
+
+                {
+                    article.articleUrl && (
+                        <a href={article.articleUrl} target="_blank">Read more</a>
+                    )
+                }
+            </div>
         </div>
     );
 };
