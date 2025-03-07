@@ -10,8 +10,9 @@ function NewsFeed() {
     const [isLoading, setIsLoading] = useState(false);
     const [groupedArticles, setGroupedArticles] = useState<Array<IArticle>>([]);
 
-    const [activeTab, setActiveTab] = useState("All");
+    const [selectedSource, setSelectedSource] = useState("All");
     const [selectedCategory, setSelectedCategory] = useState("All");
+    const [selectedAuthor, setSelectedAuthor] = useState("All");
 
     const [searchQuery, setSearchQuery] = useState("");
     const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
@@ -22,18 +23,33 @@ function NewsFeed() {
     const filteredArticles = useMemo(() => {
         return groupedArticles.filter((article) => {
             const articleDate = new Date(article.date);
+
             const isWithinDateRange =
                 (!startDate || articleDate >= new Date(startDate)) &&
                 (!endDate || articleDate <= new Date(endDate));
 
+            const matchesAuthor =
+                selectedAuthor === "All" || article.authors?.includes(selectedAuthor);
+
             return (
-                (activeTab === "All" || article.source === activeTab) &&
+                (selectedSource === "All" || article.source === selectedSource) &&
                 (selectedCategory === "All" || article.category === selectedCategory) &&
+                matchesAuthor &&
                 article.title.toLowerCase().includes(debouncedSearchQuery.toLowerCase()) &&
                 isWithinDateRange
             );
         });
-    }, [groupedArticles, activeTab, selectedCategory, debouncedSearchQuery, startDate, endDate]);
+    }, [groupedArticles, selectedSource, selectedCategory, selectedAuthor, debouncedSearchQuery, startDate, endDate]);
+
+    const allowedSources = useMemo(() => {
+        const allowedSourcesSet = new Set<string>();
+
+        groupedArticles.forEach((article) => {
+            allowedSourcesSet.add(article.source);
+        });
+
+        return ["All", ...allowedSourcesSet];
+    }, [groupedArticles]);
 
     const allowedCategories = useMemo(() => {
         const allowedCategoriesSet = new Set<string>();
@@ -45,15 +61,18 @@ function NewsFeed() {
         return ["All", ...allowedCategoriesSet];
     }, [groupedArticles]);
 
-    const allowedSources = useMemo(() => {
-        const allowedSourcesSet = new Set<string>();
+    const allowedAuthors = useMemo(() => {
+        const allowedAuthorsSet = new Set<string>();
 
         groupedArticles.forEach((article) => {
-            allowedSourcesSet.add(article.source);
+            article.authors?.forEach((authorName) => {
+                if (authorName)
+                    allowedAuthorsSet.add(authorName);
+            });
         });
 
-        return ["All", ...allowedSourcesSet];
-    }, [groupedArticles])
+        return ["All", ...allowedAuthorsSet];
+    }, [groupedArticles]);
 
     useEffect(() => {
         const timerId = setTimeout(() => {
@@ -77,7 +96,7 @@ function NewsFeed() {
 
                 setGroupedArticles([
                     ...newsApiData,
-                    // ...theGuardianData, 
+                    // ...theGuardianData,
                     ...nyTimesData,
                 ]);
             })
@@ -96,9 +115,9 @@ function NewsFeed() {
                         type="button"
                         className={clsx(
                             `px-2 lg:px-4 py-2 rounded-md transition ease-in-out duration-500 cursor-pointer`,
-                            activeTab === source ? "bg-blue-600 text-white" : "bg-gray-300 text-gray-800"
+                            selectedSource === source ? "bg-blue-600 text-white" : "bg-gray-300 text-gray-800"
                         )}
-                        onClick={() => setActiveTab(source)}
+                        onClick={() => setSelectedSource(source)}
                     >
                         {source}
                     </button>
@@ -122,6 +141,17 @@ function NewsFeed() {
                     {allowedCategories.map((category) => (
                         <option key={category} value={category}>
                             {category}
+                        </option>
+                    ))}
+                </select>
+                <select
+                    className="border p-2 rounded-md"
+                    value={selectedAuthor}
+                    onChange={(e) => setSelectedAuthor(e.target.value)}
+                >
+                    {allowedAuthors.map((author) => (
+                        <option key={author} value={author}>
+                            {author}
                         </option>
                     ))}
                 </select>

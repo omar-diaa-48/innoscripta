@@ -131,4 +131,5 @@ export interface IArticle {
   source: ArticleSourceType;
   date: Date;
   articleUrl?: string;
+  authors?: Array<string>;
 }

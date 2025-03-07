@@ -23,6 +23,7 @@ export const mapResponseToArticles = (
         date: new Date(item.publishedAt),
         articleUrl: item.url,
         source: ArticleSource.NEWS_API,
+        authors: [item.author],
       }));
 
     case ArticleSource.THE_GUARDIAN:
@@ -35,11 +36,16 @@ export const mapResponseToArticles = (
         date: new Date(item.webPublicationDate),
         articleUrl: item.webUrl,
         source: ArticleSource.THE_GUARDIAN,
+        authors: [],
       }));
 
     case ArticleSource.NY_TIMES:
-      return (response as INYTimesResponse).response.docs.map(
-        (item, index) => ({
+      return (response as INYTimesResponse).response.docs.map((item, index) => {
+        const authors = item?.byline?.person?.map(
+          (author) => `${author.firstname} ${author.lastname}`
+        );
+
+        return {
           id: Date.now() + index,
           category: item.section_name,
           imageSrc: "https://www.nytimes.com/" + item.multimedia[0]?.url,
@@ -48,8 +54,9 @@ export const mapResponseToArticles = (
           date: new Date(item.pub_date),
           articleUrl: item.web_url,
           source: ArticleSource.NY_TIMES,
-        })
-      );
+          authors,
+        };
+      });
 
     default:
       return [];
