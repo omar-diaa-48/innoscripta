@@ -32,7 +32,7 @@ export const mapResponseToArticles = (
         description: item.pillarName,
         title: item.webTitle,
         date: new Date(item.webPublicationDate),
-        source: ArticleSource.NEWS_API,
+        source: ArticleSource.THE_GUARDIAN,
       }));
 
     case ArticleSource.NY_TIMES:
