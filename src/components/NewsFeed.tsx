@@ -5,6 +5,7 @@ import Article from "./Article";
 import { IArticle } from "../utils/interfaces";
 import { getNewsApiData, getNyTimesData } from "../utils/api";
 import Loader from "./Loader";
+import useDebouncedValue from "../hooks/useDebouncedValue";
 
 function NewsFeed() {
     const [isLoading, setIsLoading] = useState(false);
@@ -15,7 +16,7 @@ function NewsFeed() {
     const [selectedAuthor, setSelectedAuthor] = useState("All");
 
     const [searchQuery, setSearchQuery] = useState("");
-    const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
+    const [debouncedSearchQuery] = useDebouncedValue(searchQuery, 250);
 
     const [startDate, setStartDate] = useState<string>("");
     const [endDate, setEndDate] = useState<string>("");
@@ -73,16 +74,6 @@ function NewsFeed() {
 
         return ["All", ...allowedAuthorsSet];
     }, [groupedArticles]);
-
-    useEffect(() => {
-        const timerId = setTimeout(() => {
-            setDebouncedSearchQuery(searchQuery);
-        }, 500);
-
-        return () => {
-            clearTimeout(timerId);
-        };
-    }, [searchQuery]);
 
     useEffect(() => {
         setIsLoading(true);
