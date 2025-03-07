@@ -33,7 +33,7 @@ function NewsFeed() {
                 isWithinDateRange
             );
         });
-    }, [activeTab, selectedCategory, debouncedSearchQuery, groupedArticles, startDate, endDate]);
+    }, [groupedArticles, activeTab, selectedCategory, debouncedSearchQuery, startDate, endDate]);
 
     const allowedCategories = useMemo(() => {
         const allowedCategoriesSet = new Set<string>();
