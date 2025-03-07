@@ -7,9 +7,9 @@ interface Props {
 
 const Article: React.FC<Props> = ({ article }) => {
     return (
-        <div className="flex flex-col bg-white p-4 rounded-lg shadow relative">
+        <div className="flex flex-col bg-white p-2 lg:p-4 rounded-lg shadow relative">
             {/* Source Tag */}
-            <span className="absolute top-8 left-8 bg-blue-600 text-white text-xs px-2 py-1 rounded-md">
+            <span className="absolute top-4 left-4 lg:top-8 lg:left-8 bg-blue-600 text-white text-xs px-2 py-1 rounded-md">
                 {article.source}
             </span>
 

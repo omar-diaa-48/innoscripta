@@ -95,7 +95,7 @@ function NewsFeed() {
                         key={source}
                         type="button"
                         className={clsx(
-                            `px-2 lg:px-4 py-2 rounded-md transition`,
+                            `px-2 lg:px-4 py-2 rounded-md transition ease-in-out duration-500 cursor-pointer`,
                             activeTab === source ? "bg-blue-600 text-white" : "bg-gray-300 text-gray-800"
                         )}
                         onClick={() => setActiveTab(source)}
