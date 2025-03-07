@@ -129,4 +129,5 @@ export interface IArticle {
   category: string;
   imageSrc: string;
   source: ArticleSourceType;
+  date: Date;
 }

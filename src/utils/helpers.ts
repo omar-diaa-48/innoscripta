@@ -20,6 +20,7 @@ export const mapResponseToArticles = (
         imageSrc: item.urlToImage,
         description: item.description,
         title: item.title,
+        date: new Date(item.publishedAt),
         source: ArticleSource.NEWS_API,
       }));
 
@@ -30,6 +31,7 @@ export const mapResponseToArticles = (
         imageSrc: item.webUrl,
         description: item.pillarName,
         title: item.webTitle,
+        date: new Date(item.webPublicationDate),
         source: ArticleSource.NEWS_API,
       }));
 
@@ -41,6 +43,7 @@ export const mapResponseToArticles = (
           imageSrc: "https://www.nytimes.com/" + item.multimedia[0]?.url,
           description: item.lead_paragraph,
           title: item.headline.main,
+          date: new Date(item.pub_date),
           source: ArticleSource.NY_TIMES,
         })
       );
