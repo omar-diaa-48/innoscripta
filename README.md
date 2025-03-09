@@ -17,21 +17,35 @@ This is a simple News Aggregator built with React, Vite, and TypeScript. It fetc
    git clone https://github.com/omar-diaa-48/innoscripta.git
    ```
 
-2. Run with Docker
+2. 
+  - Run with Docker
 
-- Build the image
+    - Build the image
 
-  ```sh
-  docker build -t innoscripta .
-  ```
+      ```sh
+      docker build -t innoscripta .
+      ```
 
-- Run the image
-  ```sh
-  docker run -p 8386:8386 innoscripta
-  ```
+    - Run the image
+      ```sh
+      docker run -p 8386:8386 innoscripta
+      ```
+
+  - Run locally
+
+    - Install dependencies
+
+      ```sh
+        yarn
+        ```
+
+    - Run the project
+
+      ```sh
+        yarn dev
+        ```
 
 ```
-
 ## Important notes
 
 1. Normally, .env files are ignored in version control for security reasons. However, in this project, the .env file is included to make it easier for anyone to run the task without needing to obtain API keys manually.
