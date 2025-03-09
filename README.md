@@ -17,7 +17,8 @@ This is a simple News Aggregator built with React, Vite, and TypeScript. It fetc
    git clone https://github.com/omar-diaa-48/innoscripta.git
    ```
 
-2. 
+2. Run the project:
+
   - Run with Docker
 
     - Build the image
