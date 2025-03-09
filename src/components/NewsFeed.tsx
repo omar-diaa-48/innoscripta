@@ -3,7 +3,7 @@ import clsx from "clsx";
 
 import Article from "./Article";
 import { IArticle } from "../utils/interfaces";
-import { getNewsApiData, getNyTimesData } from "../utils/api";
+import { getNewsApiData, getNewsDataData, getNyTimesData } from "../utils/api";
 import Loader from "./Loader";
 import useDebouncedValue from "../hooks/useDebouncedValue";
 import Dropdown from "./inputs/Dropdown";
@@ -84,18 +84,21 @@ function NewsFeed() {
             getNewsApiData(),
             // getTheGuardianData(),
             getNyTimesData(),
+            getNewsDataData(),
         ])
             .then((responses) => {
                 const [
                     newsApiData,
                     /* theGuardianData, */
-                    nyTimesData
+                    nyTimesData,
+                    newsDataData
                 ] = responses;
 
                 const shuffledArticles = shuffleArray([
                     ...newsApiData,
                     // ...theGuardianData,
                     ...nyTimesData,
+                    ...newsDataData
                 ]);
 
                 setGroupedArticles(shuffledArticles);

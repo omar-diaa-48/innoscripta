@@ -44,3 +44,15 @@ export const getNyTimesData = async () => {
 
   return mapResponseToArticles(response, ArticleSource.NY_TIMES);
 };
+
+export const getNewsDataData = async () => {
+  const response = await api
+    .get<ITheGuardianResponse>(
+      `https://newsdata.io/api/1/latest?language=en&apiKey=${
+        import.meta.env.VITE_NEWS_DATA_API_KEY
+      }`
+    )
+    .json();
+
+  return mapResponseToArticles(response, ArticleSource.NEWS_DATA);
+};

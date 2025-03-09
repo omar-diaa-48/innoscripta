@@ -2,13 +2,18 @@ import { ArticleSource } from "./constants";
 import {
   IArticle,
   INewsApiResponse,
+  INewsDataResponse,
   INYTimesResponse,
   ITheGuardianResponse,
 } from "./interfaces";
 import { ArticleSourceType } from "./types";
 
 export const mapResponseToArticles = (
-  response: INewsApiResponse | ITheGuardianResponse | INYTimesResponse,
+  response:
+    | INewsApiResponse
+    | ITheGuardianResponse
+    | INYTimesResponse
+    | INewsDataResponse,
   type: ArticleSourceType
 ): Array<IArticle> => {
   switch (type) {
@@ -55,6 +60,21 @@ export const mapResponseToArticles = (
           articleUrl: item.web_url,
           source: ArticleSource.NY_TIMES,
           authors,
+        };
+      });
+
+    case ArticleSource.NEWS_DATA:
+      return (response as INewsDataResponse).results.map((item, index) => {
+        return {
+          id: Date.now() + index,
+          category: item.category[0] ?? "News",
+          imageSrc: item.image_url,
+          description: item.description,
+          title: item.title,
+          date: new Date(item.pubDate),
+          articleUrl: item.source_url,
+          authors: item.creator,
+          source: ArticleSource.NEWS_DATA,
         };
       });
 

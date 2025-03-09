@@ -122,6 +122,35 @@ export interface INYTimesArticle {
   uri: string;
 }
 
+export interface INewsDataResponse {
+  status: string;
+  totalResults: number;
+  results: Array<INewsDataArticle>;
+  nextPage: string;
+}
+
+export interface INewsDataArticle {
+  article_id: string;
+  title: string;
+  link: string;
+  keywords: Array<string>;
+  creator: Array<string>;
+  video_url?: string;
+  description: string;
+  content: string;
+  pubDate: string;
+  pubDateTZ: string;
+  image_url: string;
+  source_id: string;
+  source_priority: number;
+  source_name: string;
+  source_url: string;
+  source_icon: string;
+  language: string;
+  country: Array<string>;
+  category: Array<string>;
+}
+
 export interface IArticle {
   id: number;
   title: string;
