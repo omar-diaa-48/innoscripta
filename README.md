@@ -27,7 +27,7 @@ This is a simple News Aggregator built with React, Vite, and TypeScript. It fetc
 
 - Run the image
   ```sh
-  docker build -t innoscripta .
+  docker run -p 8386:8386 innoscripta
   ```
 
 ```
