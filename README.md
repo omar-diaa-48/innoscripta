@@ -19,11 +19,11 @@ This is a simple News Aggregator built with React, Vite, and TypeScript. It fetc
 
 2. Run with Docker
 
-   - Build the image
+- Build the image
 
-   ```sh
-   docker build -t innoscripta .
-   ```
+  ```sh
+  docker build -t innoscripta .
+  ```
 
 - Run the image
   ```sh
@@ -37,7 +37,6 @@ This is a simple News Aggregator built with React, Vite, and TypeScript. It fetc
 1. Normally, .env files are ignored in version control for security reasons. However, in this project, the .env file is included to make it easier for anyone to run the task without needing to obtain API keys manually.
 
 2. Most of these APIs have rate limitations, so to ensure smooth operation:
-
 * The application fetches data once at the start.
 * Further searches are performed locally within the fetched dataset.
 ```
