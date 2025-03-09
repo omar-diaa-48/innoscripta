@@ -7,6 +7,7 @@ import { getNewsApiData, getNyTimesData } from "../utils/api";
 import Loader from "./Loader";
 import useDebouncedValue from "../hooks/useDebouncedValue";
 import Dropdown from "./inputs/Dropdown";
+import Input from "./inputs/Input";
 
 function NewsFeed() {
     const [isLoading, setIsLoading] = useState(false);
@@ -99,7 +100,6 @@ function NewsFeed() {
 
     return (
         <div className="min-h-screen p-6 bg-gray-100">
-            {/* Tabs */}
             <div className="flex gap-x-4 mb-6 overflow-x-scroll lg:overflow-x-visible">
                 {allowedSources.map((source) => (
                     <button
@@ -116,12 +116,11 @@ function NewsFeed() {
                 ))}
             </div>
 
-            {/* Filter Bar */}
             <div className="flex flex-wrap gap-4 bg-white p-4 shadow rounded-md mb-6 items-center">
-                <input
+                <Input
                     type="text"
                     placeholder="Search articles..."
-                    className="border p-2 rounded-md flex-1 min-w-[200px]"
+                    className="flex-1 min-w-[200px]"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                 />
@@ -131,29 +130,26 @@ function NewsFeed() {
                     onChange={(e) => setSelectedCategory(e.target.value)}
                     options={allowedCategories.map((category) => ({ label: category, value: category }))}
                 />
-                
+
                 <Dropdown
                     value={selectedAuthor}
                     onChange={(e) => setSelectedAuthor(e.target.value)}
                     options={allowedAuthors.map((author) => ({ label: author, value: author }))}
                 />
 
-                <input
+                <Input
                     type="date"
-                    className="border p-2 rounded-md"
                     value={startDate}
                     onChange={(e) => setStartDate(e.target.value)}
                 />
 
-                <input
+                <Input
                     type="date"
-                    className="border p-2 rounded-md"
                     value={endDate}
                     onChange={(e) => setEndDate(e.target.value)}
                 />
             </div>
 
-            {/* Article Grid */}
             {isLoading ? (
                 <div className="flex justify-center items-center">
                     <Loader />
