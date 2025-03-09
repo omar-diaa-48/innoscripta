@@ -39,8 +39,8 @@ function NewsFeed() {
                 (selectedSource === "All" || article.source === selectedSource) &&
                 (selectedCategory === "All" || article.category === selectedCategory) &&
                 matchesAuthor &&
-                article.title.toLowerCase().includes(debouncedSearchQuery.toLowerCase()) &&
-                isWithinDateRange
+                isWithinDateRange &&
+                article.title.toLowerCase().includes(debouncedSearchQuery.toLowerCase())
             );
         });
     }, [groupedArticles, selectedSource, selectedCategory, selectedAuthor, debouncedSearchQuery, startDate, endDate]);
