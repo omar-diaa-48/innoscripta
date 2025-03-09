@@ -158,7 +158,7 @@ function NewsFeed() {
             </div>
 
             {isLoading ? (
-                <div className="flex justify-center items-center">
+                <div className="flex justify-center">
                     <Loader />
                 </div>
             ) : (
