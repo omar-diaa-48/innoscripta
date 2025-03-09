@@ -8,6 +8,7 @@ import Loader from "./Loader";
 import useDebouncedValue from "../hooks/useDebouncedValue";
 import Dropdown from "./inputs/Dropdown";
 import Input from "./inputs/Input";
+import { shuffleArray } from "../utils/helpers";
 
 function NewsFeed() {
     const [isLoading, setIsLoading] = useState(false);
@@ -85,13 +86,19 @@ function NewsFeed() {
             getNyTimesData(),
         ])
             .then((responses) => {
-                const [newsApiData, /* theGuardianData, */ nyTimesData] = responses;
+                const [
+                    newsApiData,
+                    /* theGuardianData, */
+                    nyTimesData
+                ] = responses;
 
-                setGroupedArticles([
+                const shuffledArticles = shuffleArray([
                     ...newsApiData,
                     // ...theGuardianData,
                     ...nyTimesData,
                 ]);
+
+                setGroupedArticles(shuffledArticles);
             })
             .finally(() => {
                 setIsLoading(false);
